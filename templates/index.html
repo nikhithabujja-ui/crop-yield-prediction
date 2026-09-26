@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>CropAI - AI Crop Yield Prediction</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 CropAI
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">🏠 Home</a>
+
+        <a href="/dashboard">📊 Dashboard</a>
+
+        <a href="/history">📋 History</a>
+
+    </div>
+
+</nav>
+
+
+<!-- HERO SECTION -->
+
+<div class="hero">
+
+    <div class="hero-glow glow-one"></div>
+
+    <div class="hero-glow glow-two"></div>
+
+    <div class="hero-glow glow-three"></div>
+
+
+    <div class="hero-content">
+
+        <div class="hero-icon">
+            🌾
+        </div>
+
+
+        <h1>
+            AI Crop Yield
+            <span>Prediction</span>
+        </h1>
+
+
+        <p class="hero-text">
+
+            Predict crop production using
+            <b>Artificial Intelligence</b>,
+            weather conditions and soil data.
+
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <a href="#prediction"
+               class="hero-button">
+
+                🔮 Start Prediction
+
+            </a>
+
+
+            <a href="/dashboard"
+               class="hero-button dashboard-btn">
+
+                📊 View Dashboard
+
+            </a>
+
+        </div>
+
+
+        <div class="feature-row">
+
+            <div class="feature">
+
+                <span>🤖</span>
+
+                <p>AI Powered</p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <span>🌱</span>
+
+                <p>Soil Analysis</p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <span>🌦️</span>
+
+                <p>Weather Data</p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <span>📈</span>
+
+                <p>Yield Prediction</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- HOW IT WORKS -->
+
+<section class="how-section">
+
+    <div class="section-heading">
+
+        <h2>⚙️ How CropAI Works</h2>
+
+        <p>
+            Simple steps to predict crop yield using AI
+        </p>
+
+    </div>
+
+
+    <div class="steps-container">
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                01
+            </div>
+
+            <div class="step-icon">
+                🌾
+            </div>
+
+            <h3>Select Crop</h3>
+
+            <p>
+                Choose the crop you want to analyze
+                from the available crop types.
+            </p>
+
+        </div>
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                02
+            </div>
+
+            <div class="step-icon">
+                🌦️
+            </div>
+
+            <h3>Enter Conditions</h3>
+
+            <p>
+                Provide rainfall, temperature,
+                humidity and soil information.
+            </p>
+
+        </div>
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                03
+            </div>
+
+            <div class="step-icon">
+                🤖
+            </div>
+
+            <h3>AI Analysis</h3>
+
+            <p>
+                The machine learning model analyzes
+                the provided agricultural data.
+            </p>
+
+        </div>
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                04
+            </div>
+
+            <div class="step-icon">
+                📈
+            </div>
+
+            <h3>Get Prediction</h3>
+
+            <p>
+                CropAI provides an estimated yield
+                in tons per hectare.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- PREDICTION SECTION -->
+
+<div id="prediction"
+     class="prediction-section">
+
+
+    <div class="prediction-card">
+
+        <div class="prediction-title">
+
+            <h2>
+                🌾 Enter Crop Information
+            </h2>
+
+            <p>
+                Provide soil and weather conditions
+                to predict crop yield.
+            </p>
+
+        </div>
+
+
+        <form action="/predict"
+              method="POST">
+
+
+            <div class="form-grid">
+
+
+                <div class="field">
+
+                    <label>
+                        🌾 Crop
+                    </label>
+
+                    <select name="crop"
+                            required>
+
+                        <option value="0">
+                            Rice
+                        </option>
+
+                        <option value="1">
+                            Wheat
+                        </option>
+
+                        <option value="2">
+                            Maize
+                        </option>
+
+                        <option value="3">
+                            Cotton
+                        </option>
+
+                        <option value="4">
+                            Sugarcane
+                        </option>
+
+                        <option value="5">
+                            Groundnut
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        🌧️ Rainfall (mm)
+                    </label>
+
+                    <input
+                        type="number"
+                        name="rainfall"
+                        step="0.1"
+                        required>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        🌡️ Temperature (°C)
+                    </label>
+
+                    <input
+                        type="number"
+                        name="temperature"
+                        step="0.1"
+                        required>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        💧 Humidity (%)
+                    </label>
+
+                    <input
+                        type="number"
+                        name="humidity"
+                        step="0.1"
+                        required>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        🧪 Soil pH
+                    </label>
+
+                    <input
+                        type="number"
+                        name="soil_ph"
+                        step="0.1"
+                        required>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        🌱 Nitrogen
+                    </label>
+
+                    <input
+                        type="number"
+                        name="nitrogen"
+                        step="0.1"
+                        required>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        🧬 Phosphorus
+                    </label>
+
+                    <input
+                        type="number"
+                        name="phosphorus"
+                        step="0.1"
+                        required>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        ⚡ Potassium
+                    </label>
+
+                    <input
+                        type="number"
+                        name="potassium"
+                        step="0.1"
+                        required>
+
+                </div>
+
+            </div>
+
+
+            <button type="submit"
+                    class="predict-button">
+
+                🔮 Predict Crop Yield
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        🌾 CropAI | AI-Based Crop Yield Prediction System
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

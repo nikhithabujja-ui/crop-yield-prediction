@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Crop Yield Dashboard - CropAI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 CropAI
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">🏠 Home</a>
+
+        <a href="/dashboard">📊 Dashboard</a>
+
+        <a href="/history">📋 History</a>
+
+    </div>
+
+</nav>
+
+
+<div class="dashboard-container">
+
+    <div class="dashboard-header">
+
+        <h1>
+            🌾 Crop Yield Dashboard
+        </h1>
+
+        <p>
+            AI-Based Crop Yield Prediction System
+        </p>
+
+    </div>
+
+
+    <!-- STATISTICS CARDS -->
+
+    <div class="dashboard-cards">
+
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                📊
+            </div>
+
+            <h3>
+                Total Predictions
+            </h3>
+
+            <div class="card-value">
+                {{ total_predictions }}
+            </div>
+
+            <p>
+                Predictions made
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                🌾
+            </div>
+
+            <h3>
+                Latest Crop
+            </h3>
+
+            <div class="card-value">
+                {{ latest_crop }}
+            </div>
+
+            <p>
+                Most recent prediction
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                📈
+            </div>
+
+            <h3>
+                Average Yield
+            </h3>
+
+            <div class="card-value">
+                {{ average_yield }}
+            </div>
+
+            <p>
+                tons/hectare
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                🔮
+            </div>
+
+            <h3>
+                Latest Yield
+            </h3>
+
+            <div class="card-value">
+                {{ latest_yield }}
+            </div>
+
+            <p>
+                tons/hectare
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- CHART -->
+
+    <div class="chart-container">
+
+        <h2>
+            📈 Crop Yield Predictions
+        </h2>
+
+        <p style="color:#9bbab1; margin-bottom:25px;">
+            Overview of your previous AI predictions
+        </p>
+
+
+        <div class="chart">
+
+            <div class="chart-y">
+
+                <span>8</span>
+                <span>6</span>
+                <span>4</span>
+                <span>2</span>
+                <span>0</span>
+
+            </div>
+
+
+            <div class="chart-content">
+
+                <div class="bars">
+
+
+                    {% for i in range(crop_names|length) %}
+
+
+                    <div class="bar-item">
+
+
+                        <div class="bar-number">
+
+                            {{ crop_yields[i] }}
+
+                        </div>
+
+
+                        <div class="bar-wrapper">
+
+
+                            <div class="bar"
+                                 style="height: {{ crop_yields[i] * 40 }}px;">
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="bar-name">
+
+                            {{ crop_names[i] }}
+
+                        </div>
+
+
+                    </div>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- INFORMATION -->
+
+    <div class="dashboard-info">
+
+
+        <div class="info-box">
+
+            <div class="info-icon">
+                🤖
+            </div>
+
+            <div>
+
+                <h3>
+                    AI Powered
+                </h3>
+
+                <p>
+                    CropAI uses a Random Forest
+                    machine learning model to
+                    estimate crop yield.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <div class="info-icon">
+                🌱
+            </div>
+
+            <div>
+
+                <h3>
+                    Soil Analysis
+                </h3>
+
+                <p>
+                    Soil pH and nutrient values
+                    are included in the prediction.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <div class="info-icon">
+                🌦️
+            </div>
+
+            <div>
+
+                <h3>
+                    Weather Analysis
+                </h3>
+
+                <p>
+                    Rainfall, temperature and
+                    humidity are used as inputs.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- BUTTONS -->
+
+    <div class="dashboard-actions">
+
+        <a href="/"
+           class="action-button">
+
+            🔮 New Prediction
+
+        </a>
+
+
+        <a href="/history"
+           class="action-button secondary">
+
+            📋 View History
+
+        </a>
+
+    </div>
+
+
+</div>
+
+
+<footer>
+
+    <p>
+        🌾 CropAI | AI-Based Crop Yield Prediction System
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>CropAI - Error</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 CropAI
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">🏠 Home</a>
+
+        <a href="/dashboard">📊 Dashboard</a>
+
+        <a href="/history">📋 History</a>
+
+    </div>
+
+</nav>
+
+
+<div class="result-container">
+
+    <div class="result-card">
+
+        <div style="font-size:70px;">
+            ⚠️
+        </div>
+
+        <h1>
+            {{ title }}
+        </h1>
+
+        <p style="color:#9bbab1; margin-top:15px;">
+            {{ message }}
+        </p>
+
+
+        <div class="dashboard-actions">
+
+            <a href="/" class="action-button">
+                ← Try Again
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    <p>
+        🌾 CropAI | AI-Based Crop Yield Prediction System
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

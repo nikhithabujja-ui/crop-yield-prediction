@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Prediction Result - CropAI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 CropAI
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">🏠 Home</a>
+
+        <a href="/dashboard">📊 Dashboard</a>
+
+        <a href="/history">📋 History</a>
+
+    </div>
+
+</nav>
+
+
+<div class="result-container">
+
+    <div class="result-card">
+
+        <div style="font-size:70px;">
+            🌾
+        </div>
+
+
+        <h1>
+            AI Prediction Complete
+        </h1>
+
+
+        <p style="color:#9bbab1; margin-bottom:25px;">
+            Crop yield prediction generated successfully
+        </p>
+
+
+        <div class="result-box">
+
+            <p style="color:#9bbab1;">
+                📈 Predicted Crop Yield
+            </p>
+
+
+            <div class="result-value">
+
+                {{ prediction }}
+
+            </div>
+
+
+            <p style="color:#72ffc5; margin-top:10px;">
+
+                tons/hectare
+
+            </p>
+
+        </div>
+
+
+        <div class="prediction-status">
+
+            <div>
+                🤖
+            </div>
+
+            <div>
+
+                <h3>
+                    AI Analysis Complete
+                </h3>
+
+                <p>
+                    CropAI analyzed the provided
+                    weather and soil conditions.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <div class="info-item">
+
+                <span>🌱</span>
+
+                <strong>
+                    Soil Data
+                </strong>
+
+                <p>
+                    Analyzed
+                </p>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>🌦️</span>
+
+                <strong>
+                    Weather Data
+                </strong>
+
+                <p>
+                    Analyzed
+                </p>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span>🤖</span>
+
+                <strong>
+                    ML Model
+                </strong>
+
+                <p>
+                    Random Forest
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-actions">
+
+            <a href="/"
+               class="action-button">
+
+                🔮 New Prediction
+
+            </a>
+
+
+            <a href="/dashboard"
+               class="action-button secondary">
+
+                📊 Dashboard
+
+            </a>
+
+
+            <a href="/history"
+               class="action-button secondary">
+
+                📋 History
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    <p>
+        🌾 CropAI | AI-Based Crop Yield Prediction System
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Prediction History - CropAI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 CropAI
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">🏠 Home</a>
+
+        <a href="/dashboard">📊 Dashboard</a>
+
+        <a href="/history">📋 History</a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <h1>
+        📋 Prediction History
+    </h1>
+
+    <p class="subtitle">
+        View all your previous crop yield predictions
+    </p>
+
+
+    {% if predictions %}
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <tr>
+
+                <th>Crop</th>
+
+                <th>Rainfall</th>
+
+                <th>Temperature</th>
+
+                <th>Humidity</th>
+
+                <th>Predicted Yield</th>
+
+                <th>Date & Time</th>
+
+            </tr>
+
+
+            {% for row in predictions %}
+
+            <tr>
+
+                <td>
+                    🌾 {{ row[1] }}
+                </td>
+
+                <td>
+                    {{ row[2] }} mm
+                </td>
+
+                <td>
+                    {{ row[3] }} °C
+                </td>
+
+                <td>
+                    {{ row[4] }} %
+                </td>
+
+                <td>
+
+                    <b>
+                        {{ row[9] }} tons/hectare
+                    </b>
+
+                </td>
+
+                <td>
+
+                    {% if row[10] %}
+
+                        🕒 {{ row[10] }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="result-card">
+
+        <div style="font-size:60px;">
+            📋
+        </div>
+
+        <h2>
+            No Predictions Yet
+        </h2>
+
+        <p style="color:#9bbab1;">
+            Make your first crop yield prediction
+            to see it here.
+        </p>
+
+        <div class="dashboard-actions">
+
+            <a href="/" class="action-button">
+                🔮 Make Prediction
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <div style="text-align:center; margin-top:30px;">
+
+        <a href="/" class="back">
+            ← New Prediction
+        </a>
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    <p>
+        🌾 CropAI | AI-Based Crop Yield Prediction System
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
