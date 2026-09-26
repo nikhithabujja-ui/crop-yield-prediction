@@ -8,17 +8,13 @@
 <body>
 
 <nav class="navbar">
-
-    <div class="logo">
-        🌾 CropAI
-    </div>
+    <div class="logo">🌾 CropAI</div>
 
     <div class="nav-links">
         <a href="/">🏠 Home</a>
         <a href="/dashboard">📊 Dashboard</a>
         <a href="/history">📋 History</a>
     </div>
-
 </nav>
 
 
@@ -56,7 +52,6 @@
             </a>
 
         </div>
-
 
         <div class="feature-row">
 
@@ -102,13 +97,10 @@
 
     </div>
 
-
     <div class="steps-container">
 
         <div class="step-card">
-
             <div class="step-number">01</div>
-
             <div class="step-icon">🌾</div>
 
             <h3>Choose Crop</h3>
@@ -117,14 +109,11 @@
                 Select the crop you want to analyze,
                 such as Rice, Wheat, Maize or Cotton.
             </p>
-
         </div>
 
 
         <div class="step-card">
-
             <div class="step-number">02</div>
-
             <div class="step-icon">🌦️</div>
 
             <h3>Enter Data</h3>
@@ -133,14 +122,11 @@
                 Enter rainfall, temperature, humidity
                 and soil nutrient information.
             </p>
-
         </div>
 
 
         <div class="step-card">
-
             <div class="step-number">03</div>
-
             <div class="step-icon">🤖</div>
 
             <h3>AI Processing</h3>
@@ -149,14 +135,11 @@
                 The Random Forest machine learning model
                 processes the agricultural data.
             </p>
-
         </div>
 
 
         <div class="step-card">
-
             <div class="step-number">04</div>
-
             <div class="step-icon">📈</div>
 
             <h3>Get Yield</h3>
@@ -165,7 +148,6 @@
                 Receive an estimated crop yield
                 in tons per hectare.
             </p>
-
         </div>
 
     </div>
@@ -184,8 +166,8 @@
             <h2>🌾 Enter Crop Information</h2>
 
             <p>
-                Provide soil and weather conditions
-                to predict crop yield.
+                Enter the following agricultural conditions
+                to generate an AI-based yield estimate.
             </p>
 
         </div>
@@ -196,28 +178,28 @@
             <div class="form-grid">
 
 
+                <!-- CROP -->
+
                 <div class="field">
 
                     <label>🌾 Crop</label>
 
                     <select name="crop" required>
 
+                        <option value="">Select Crop</option>
                         <option value="0">Rice</option>
-
                         <option value="1">Wheat</option>
-
                         <option value="2">Maize</option>
-
                         <option value="3">Cotton</option>
-
                         <option value="4">Sugarcane</option>
-
                         <option value="5">Groundnut</option>
 
                     </select>
 
                 </div>
 
+
+                <!-- RAINFALL -->
 
                 <div class="field">
 
@@ -226,13 +208,16 @@
                     <input
                         type="number"
                         name="rainfall"
-                        step="0.1"
+                        placeholder="Example: 1200"
                         min="0"
+                        step="0.1"
                         required
                     >
 
                 </div>
 
+
+                <!-- TEMPERATURE -->
 
                 <div class="field">
 
@@ -241,12 +226,17 @@
                     <input
                         type="number"
                         name="temperature"
+                        placeholder="Example: 28"
+                        min="-50"
+                        max="60"
                         step="0.1"
                         required
                     >
 
                 </div>
 
+
+                <!-- HUMIDITY -->
 
                 <div class="field">
 
@@ -255,14 +245,17 @@
                     <input
                         type="number"
                         name="humidity"
-                        step="0.1"
+                        placeholder="Example: 80"
                         min="0"
                         max="100"
+                        step="0.1"
                         required
                     >
 
                 </div>
 
+
+                <!-- SOIL PH -->
 
                 <div class="field">
 
@@ -271,14 +264,17 @@
                     <input
                         type="number"
                         name="soil_ph"
-                        step="0.1"
+                        placeholder="Example: 6.5"
                         min="0"
                         max="14"
+                        step="0.1"
                         required
                     >
 
                 </div>
 
+
+                <!-- NITROGEN -->
 
                 <div class="field">
 
@@ -287,13 +283,16 @@
                     <input
                         type="number"
                         name="nitrogen"
-                        step="0.1"
+                        placeholder="Example: 90"
                         min="0"
+                        step="0.1"
                         required
                     >
 
                 </div>
 
+
+                <!-- PHOSPHORUS -->
 
                 <div class="field">
 
@@ -302,13 +301,16 @@
                     <input
                         type="number"
                         name="phosphorus"
-                        step="0.1"
+                        placeholder="Example: 45"
                         min="0"
+                        step="0.1"
                         required
                     >
 
                 </div>
 
+
+                <!-- POTASSIUM -->
 
                 <div class="field">
 
@@ -317,13 +319,13 @@
                     <input
                         type="number"
                         name="potassium"
-                        step="0.1"
+                        placeholder="Example: 40"
                         min="0"
+                        step="0.1"
                         required
                     >
 
                 </div>
-
 
             </div>
 
