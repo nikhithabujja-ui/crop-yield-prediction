@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Prediction Result - CropAI</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
-
 </head>
 
 <body>
@@ -19,13 +19,10 @@
     </div>
 
     <div class="nav-links">
-
         <a href="/">🏠 Home</a>
-
         <a href="/dashboard">📊 Dashboard</a>
-
         <a href="/history">📋 History</a>
-
+        <a href="/recommendations">🌱 Recommendations</a>
     </div>
 
 </nav>
@@ -39,16 +36,16 @@
             🌾
         </div>
 
-
         <h1>
             AI Prediction Complete
         </h1>
-
 
         <p style="color:#9bbab1; margin-bottom:25px;">
             Crop yield prediction generated successfully
         </p>
 
+
+        <!-- Prediction Result -->
 
         <div class="result-box">
 
@@ -56,26 +53,22 @@
                 📈 Predicted Crop Yield
             </p>
 
-
             <div class="result-value">
-
                 {{ prediction }}
-
             </div>
 
-
             <p style="color:#72ffc5; margin-top:10px;">
-
                 tons/hectare
-
             </p>
 
         </div>
 
 
+        <!-- AI Analysis -->
+
         <div class="prediction-status">
 
-            <div>
+            <div style="font-size:35px;">
                 🤖
             </div>
 
@@ -86,14 +79,156 @@
                 </h3>
 
                 <p>
-                    CropAI analyzed the provided
-                    weather and soil conditions.
+                    CropAI analyzed the provided weather and soil
+                    conditions using the trained Random Forest
+                    machine learning model.
                 </p>
 
             </div>
 
         </div>
 
+
+        <!-- Prediction Summary -->
+
+        <div class="prediction-summary">
+
+            <div class="summary-title">
+
+                <span>📋</span>
+
+                <div>
+                    <h2>
+                        Prediction Summary
+                    </h2>
+
+                    <p>
+                        Important information about this prediction
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="summary-grid">
+
+                <div class="summary-item">
+
+                    <span>🌱</span>
+
+                    <div>
+                        <p>Crop</p>
+                        <strong>
+                            {{ crop }}
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>🌧️</span>
+
+                    <div>
+                        <p>Rainfall</p>
+                        <strong>
+                            {{ rainfall }} mm
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>🌡️</span>
+
+                    <div>
+                        <p>Temperature</p>
+                        <strong>
+                            {{ temperature }} °C
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>💧</span>
+
+                    <div>
+                        <p>Humidity</p>
+                        <strong>
+                            {{ humidity }} %
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>🧪</span>
+
+                    <div>
+                        <p>Soil pH</p>
+                        <strong>
+                            {{ soil_ph }}
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>🧬</span>
+
+                    <div>
+                        <p>Nitrogen</p>
+                        <strong>
+                            {{ nitrogen }}
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>⚗️</span>
+
+                    <div>
+                        <p>Phosphorus</p>
+                        <strong>
+                            {{ phosphorus }}
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <span>🔬</span>
+
+                    <div>
+                        <p>Potassium</p>
+                        <strong>
+                            {{ potassium }}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Model Information -->
 
         <div class="info-row">
 
@@ -144,29 +279,28 @@
         </div>
 
 
+        <!-- Actions -->
+
         <div class="dashboard-actions">
 
             <a href="/"
                class="action-button">
-
                 🔮 New Prediction
-
             </a>
 
+            <a href="/recommendations"
+               class="action-button secondary">
+                🌱 Recommendations
+            </a>
 
             <a href="/dashboard"
                class="action-button secondary">
-
                 📊 Dashboard
-
             </a>
-
 
             <a href="/history"
                class="action-button secondary">
-
                 📋 History
-
             </a>
 
         </div>
@@ -184,7 +318,5 @@
 
 </footer>
 
-
 </body>
-
 </html>
