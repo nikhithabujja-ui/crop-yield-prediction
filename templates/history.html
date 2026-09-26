@@ -5,12 +5,18 @@
 
     <title>Prediction History - CropAI</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
 
 </head>
 
+
 <body>
+
+
+<!-- NAVBAR -->
 
 <nav class="navbar">
 
@@ -20,141 +26,327 @@
 
     <div class="nav-links">
 
-        <a href="/">🏠 Home</a>
+        <a href="/">
+            🏠 Home
+        </a>
 
-        <a href="/dashboard">📊 Dashboard</a>
+        <a href="/dashboard">
+            📊 Dashboard
+        </a>
 
-        <a href="/history">📋 History</a>
+        <a href="/history">
+            📋 History
+        </a>
 
     </div>
 
 </nav>
 
 
+<!-- HISTORY PAGE -->
+
 <div class="container">
 
-    <h1>
-        📋 Prediction History
-    </h1>
 
-    <p class="subtitle">
-        View all your previous crop yield predictions
-    </p>
+    <div class="dashboard-header">
+
+        <h1>
+            📋 Prediction History
+        </h1>
+
+        <p>
+            View all previous CropAI yield predictions
+        </p>
+
+    </div>
 
 
     {% if predictions %}
 
-    <div class="table-wrapper">
 
-        <table>
+    <!-- SUMMARY -->
 
-            <tr>
+    <div class="history-summary">
 
-                <th>Crop</th>
+        <div class="history-summary-card">
 
-                <th>Rainfall</th>
+            <span>📊</span>
 
-                <th>Temperature</th>
+            <div>
 
-                <th>Humidity</th>
+                <h3>
+                    Total Predictions
+                </h3>
 
-                <th>Predicted Yield</th>
+                <strong>
+                    {{ predictions|length }}
+                </strong>
 
-                <th>Date & Time</th>
+            </div>
 
-            </tr>
+        </div>
 
 
-            {% for row in predictions %}
+        <div class="history-summary-card">
 
-            <tr>
+            <span>🌾</span>
 
-                <td>
-                    🌾 {{ row[1] }}
-                </td>
+            <div>
 
-                <td>
-                    {{ row[2] }} mm
-                </td>
+                <h3>
+                    Latest Crop
+                </h3>
 
-                <td>
-                    {{ row[3] }} °C
-                </td>
+                <strong>
+                    {{ predictions[0][1] }}
+                </strong>
 
-                <td>
-                    {{ row[4] }} %
-                </td>
+            </div>
 
-                <td>
+        </div>
 
-                    <b>
-                        {{ row[9] }} tons/hectare
-                    </b>
 
-                </td>
+        <div class="history-summary-card">
 
-                <td>
+            <span>📈</span>
 
-                    {% if row[10] %}
+            <div>
 
-                        🕒 {{ row[10] }}
+                <h3>
+                    Latest Yield
+                </h3>
 
-                    {% else %}
+                <strong>
+                    {{ predictions[0][9] }}
+                    <small>tons/ha</small>
+                </strong>
 
-                        —
+            </div>
 
-                    {% endif %}
-
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </table>
+        </div>
 
     </div>
 
-    {% else %}
 
-    <div class="result-card">
+    <!-- TABLE -->
 
-        <div style="font-size:60px;">
-            📋
-        </div>
+    <div class="history-table-card">
 
-        <h2>
-            No Predictions Yet
-        </h2>
+        <div class="history-table-header">
 
-        <p style="color:#9bbab1;">
-            Make your first crop yield prediction
-            to see it here.
-        </p>
+            <div>
 
-        <div class="dashboard-actions">
+                <h2>
+                    🌱 Previous Predictions
+                </h2>
 
-            <a href="/" class="action-button">
-                🔮 Make Prediction
+                <p>
+                    Detailed information about your AI predictions
+                </p>
+
+            </div>
+
+            <a
+                href="/"
+                class="action-button"
+            >
+                🔮 New Prediction
             </a>
 
         </div>
 
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Crop
+                        </th>
+
+                        <th>
+                            Rainfall
+                        </th>
+
+                        <th>
+                            Temperature
+                        </th>
+
+                        <th>
+                            Humidity
+                        </th>
+
+                        <th>
+                            Soil pH
+                        </th>
+
+                        <th>
+                            Yield
+                        </th>
+
+                        <th>
+                            Date & Time
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for row in predictions %}
+
+                    <tr>
+
+                        <td>
+                            #{{ row[0] }}
+                        </td>
+
+                        <td>
+
+                            <strong class="crop-name">
+                                🌾 {{ row[1] }}
+                            </strong>
+
+                        </td>
+
+                        <td>
+                            {{ row[2] }} mm
+                        </td>
+
+                        <td>
+                            {{ row[3] }} °C
+                        </td>
+
+                        <td>
+                            {{ row[4] }} %
+                        </td>
+
+                        <td>
+                            {{ row[5] }}
+                        </td>
+
+                        <td>
+
+                            <strong class="yield-value">
+                                {{ row[9] }}
+                            </strong>
+
+                            <span class="yield-unit">
+                                tons/ha
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            {% if row[10] %}
+
+                                🕒 {{ row[10] }}
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
     </div>
+
+
+    {% else %}
+
+
+    <!-- NO DATA -->
+
+    <div class="result-container">
+
+        <div class="result-card">
+
+            <div style="font-size:70px;">
+                📋
+            </div>
+
+            <h1>
+                No Predictions Yet
+            </h1>
+
+            <p style="color:#9bbab1; margin-top:15px;">
+                Make your first crop yield prediction
+                to see the results here.
+            </p>
+
+            <div class="dashboard-actions">
+
+                <a
+                    href="/"
+                    class="action-button"
+                >
+                    🔮 Make Prediction
+                </a>
+
+                <a
+                    href="/dashboard"
+                    class="action-button secondary"
+                >
+                    📊 Dashboard
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
 
     {% endif %}
 
 
-    <div style="text-align:center; margin-top:30px;">
+    <!-- BOTTOM ACTIONS -->
 
-        <a href="/" class="back">
-            ← New Prediction
+    <div class="dashboard-actions">
+
+        <a
+            href="/"
+            class="action-button"
+        >
+            🔮 New Prediction
+        </a>
+
+        <a
+            href="/dashboard"
+            class="action-button secondary"
+        >
+            📊 Dashboard
         </a>
 
     </div>
 
+
 </div>
 
+
+<!-- FOOTER -->
 
 <footer>
 
