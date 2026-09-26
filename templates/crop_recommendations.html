@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Crop Recommendations - CropAI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">🌾 CropAI</div>
+
+    <div class="nav-links">
+        <a href="/">🏠 Home</a>
+        <a href="/dashboard">📊 Dashboard</a>
+        <a href="/history">📋 History</a>
+    </div>
+</nav>
+
+
+<div class="recommendation-container">
+
+    <div class="recommendation-header">
+
+        <div class="recommendation-icon">
+            🌱
+        </div>
+
+        <h1>Crop Recommendations</h1>
+
+        <p>
+            Explore suitable environmental conditions for different crops.
+        </p>
+
+    </div>
+
+
+    <div class="recommendation-grid">
+
+        <div class="recommendation-card">
+
+            <div class="crop-icon">🌾</div>
+
+            <h2>Rice</h2>
+
+            <p>
+                Suitable for warm and humid conditions with good rainfall.
+            </p>
+
+            <div class="crop-details">
+                <div>
+                    <span>🌧️ Rainfall</span>
+                    <strong>1100–1300 mm</strong>
+                </div>
+
+                <div>
+                    <span>🌡️ Temperature</span>
+                    <strong>27–29 °C</strong>
+                </div>
+
+                <div>
+                    <span>💧 Humidity</span>
+                    <strong>78–82 %</strong>
+                </div>
+
+                <div>
+                    <span>🧪 Soil pH</span>
+                    <strong>6.2–6.7</strong>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="recommendation-card">
+
+            <div class="crop-icon">🌾</div>
+
+            <h2>Wheat</h2>
+
+            <p>
+                Performs well in moderate temperatures and rainfall.
+            </p>
+
+            <div class="crop-details">
+                <div>
+                    <span>🌧️ Rainfall</span>
+                    <strong>550–650 mm</strong>
+                </div>
+
+                <div>
+                    <span>🌡️ Temperature</span>
+                    <strong>21–23 °C</strong>
+                </div>
+
+                <div>
+                    <span>💧 Humidity</span>
+                    <strong>58–62 %</strong>
+                </div>
+
+                <div>
+                    <span>🧪 Soil pH</span>
+                    <strong>6.5–7.0</strong>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="recommendation-card">
+
+            <div class="crop-icon">🌽</div>
+
+            <h2>Maize</h2>
+
+            <p>
+                Suitable for warm temperatures and moderate rainfall.
+            </p>
+
+            <div class="crop-details">
+                <div>
+                    <span>🌧️ Rainfall</span>
+                    <strong>650–750 mm</strong>
+                </div>
+
+                <div>
+                    <span>🌡️ Temperature</span>
+                    <strong>24–26 °C</strong>
+                </div>
+
+                <div>
+                    <span>💧 Humidity</span>
+                    <strong>63–68 %</strong>
+                </div>
+
+                <div>
+                    <span>🧪 Soil pH</span>
+                    <strong>6.1–6.5</strong>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="recommendation-card">
+
+            <div class="crop-icon">🌿</div>
+
+            <h2>Cotton</h2>
+
+            <p>
+                Prefers warm conditions with moderate humidity.
+            </p>
+
+            <div class="crop-details">
+                <div>
+                    <span>🌧️ Rainfall</span>
+                    <strong>750–850 mm</strong>
+                </div>
+
+                <div>
+                    <span>🌡️ Temperature</span>
+                    <strong>29–31 °C</strong>
+                </div>
+
+                <div>
+                    <span>💧 Humidity</span>
+                    <strong>53–57 %</strong>
+                </div>
+
+                <div>
+                    <span>🧪 Soil pH</span>
+                    <strong>7.0–7.3</strong>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="recommendation-card">
+
+            <div class="crop-icon">🎋</div>
+
+            <h2>Sugarcane</h2>
+
+            <p>
+                Requires warm conditions, high rainfall and humidity.
+            </p>
+
+            <div class="crop-details">
+                <div>
+                    <span>🌧️ Rainfall</span>
+                    <strong>1300–1500 mm</strong>
+                </div>
+
+                <div>
+                    <span>🌡️ Temperature</span>
+                    <strong>26–28 °C</strong>
+                </div>
+
+                <div>
+                    <span>💧 Humidity</span>
+                    <strong>73–78 %</strong>
+                </div>
+
+                <div>
+                    <span>🧪 Soil pH</span>
+                    <strong>6.5–7.0</strong>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="recommendation-card">
+
+            <div class="crop-icon">🥜</div>
+
+            <h2>Groundnut</h2>
+
+            <p>
+                Suitable for warm temperatures and moderate rainfall.
+            </p>
+
+            <div class="crop-details">
+                <div>
+                    <span>🌧️ Rainfall</span>
+                    <strong>450–550 mm</strong>
+                </div>
+
+                <div>
+                    <span>🌡️ Temperature</span>
+                    <strong>27–29 °C</strong>
+                </div>
+
+                <div>
+                    <span>💧 Humidity</span>
+                    <strong>52–58 %</strong>
+                </div>
+
+                <div>
+                    <span>🧪 Soil pH</span>
+                    <strong>6.0–6.5</strong>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="recommendation-note">
+
+        <span>🤖</span>
+
+        <div>
+            <h3>CropAI Information</h3>
+
+            <p>
+                These ranges are based on the demonstration dataset used
+                by this project. They are intended for project demonstration
+                and should not be treated as real agricultural advice.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-actions">
+
+        <a href="/" class="action-button">
+            🔮 New Prediction
+        </a>
+
+        <a href="/dashboard" class="action-button secondary">
+            📊 Dashboard
+        </a>
+
+        <a href="/history" class="action-button secondary">
+            📋 History
+        </a>
+
+    </div>
+
+</div>
+
+
+<footer>
+    <p>🌾 CropAI | AI-Based Crop Yield Prediction System</p>
+</footer>
+
+</body>
+</html>

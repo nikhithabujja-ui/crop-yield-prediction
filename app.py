@@ -6,19 +6,12 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-
-# ==============================
-# LOAD MACHINE LEARNING MODEL
-# ==============================
-
+# Load trained model
 with open("crop_yield_model.pkl", "rb") as file:
     model = pickle.load(file)
 
 
-# ==============================
-# CROP MAPPING
-# ==============================
-
+# Crop mapping
 crop_names = {
     0: "Rice",
     1: "Wheat",
@@ -28,35 +21,42 @@ crop_names = {
     5: "Groundnut"
 }
 
+crop_mapping = {
+    "Rice": 0,
+    "Wheat": 1,
+    "Maize": 2,
+    "Cotton": 3,
+    "Sugarcane": 4,
+    "Groundnut": 5
+}
 
-# ==============================
-# DATABASE CONNECTION
-# ==============================
 
+# Database connection
 def get_db_connection():
     conn = sqlite3.connect("crop_yield.db")
+    conn.row_factory = sqlite3.Row
     return conn
 
 
-# ==============================
-# HOME PAGE
-# ==============================
-
+# Home page
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# ==============================
-# PREDICTION
-# ==============================
+# Crop recommendations page
+@app.route("/recommendations")
+def recommendations():
+    return render_template("crop_recommendations.html")
 
+
+# Prediction
 @app.route("/predict", methods=["POST"])
 def predict():
 
     try:
+        crop = request.form["crop"]
 
-        crop = int(request.form["crop"])
         rainfall = float(request.form["rainfall"])
         temperature = float(request.form["temperature"])
         humidity = float(request.form["humidity"])
@@ -65,193 +65,93 @@ def predict():
         phosphorus = float(request.form["phosphorus"])
         potassium = float(request.form["potassium"])
 
-    except (ValueError, KeyError):
+        crop_code = crop_mapping[crop]
+
+        input_data = pd.DataFrame(
+            [[
+                crop_code,
+                rainfall,
+                temperature,
+                humidity,
+                soil_ph,
+                nitrogen,
+                phosphorus,
+                potassium
+            ]],
+            columns=[
+                "crop",
+                "rainfall",
+                "temperature",
+                "humidity",
+                "soil_ph",
+                "nitrogen",
+                "phosphorus",
+                "potassium"
+            ]
+        )
+
+        prediction = model.predict(input_data)[0]
+
+        prediction = round(float(prediction), 2)
+
+        # Save prediction to database
+        conn = get_db_connection()
+
+        conn.execute(
+            """
+            INSERT INTO predictions
+            (
+                crop,
+                rainfall,
+                temperature,
+                humidity,
+                soil_ph,
+                nitrogen,
+                phosphorus,
+                potassium,
+                predicted_yield,
+                prediction_date
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                crop,
+                rainfall,
+                temperature,
+                humidity,
+                soil_ph,
+                nitrogen,
+                phosphorus,
+                potassium,
+                prediction,
+                datetime.now().strftime("%Y-%m-%d %I:%M %p")
+            )
+        )
+
+        conn.commit()
+        conn.close()
+
+        return render_template(
+            "result.html",
+            prediction=prediction
+        )
+
+    except Exception as e:
 
         return render_template(
             "error.html",
-            title="❌ Invalid Input",
-            message="Please enter valid values in all fields."
+            title="❌ Prediction Error",
+            message=str(e)
         )
 
 
-    if crop not in crop_names:
-
-        return render_template(
-            "error.html",
-            title="❌ Invalid Crop",
-            message="Please select a valid crop."
-        )
-
-
-    if rainfall < 0:
-
-        return render_template(
-            "error.html",
-            title="❌ Invalid Rainfall",
-            message="Rainfall cannot be negative."
-        )
-
-
-    if temperature < -50 or temperature > 60:
-
-        return render_template(
-            "error.html",
-            title="❌ Invalid Temperature",
-            message="Please enter a realistic temperature."
-        )
-
-
-    if humidity < 0 or humidity > 100:
-
-        return render_template(
-            "error.html",
-            title="❌ Invalid Humidity",
-            message="Humidity must be between 0 and 100%."
-        )
-
-
-    if soil_ph < 0 or soil_ph > 14:
-
-        return render_template(
-            "error.html",
-            title="❌ Invalid Soil pH",
-            message="Soil pH must be between 0 and 14."
-        )
-
-
-    if nitrogen < 0:
-
-        return render_template(
-            "error.html",
-            title="❌ Invalid Nitrogen",
-            message="Nitrogen cannot be negative."
-        )
-
-
-    if phosphorus < 0:
-
-        return render_template(
-            "error.html",
-            title="❌ Invalid Phosphorus",
-            message="Phosphorus cannot be negative."
-        )
-
-
-    if potassium < 0:
-
-        return render_template(
-            "error.html",
-            title="❌ Invalid Potassium",
-            message="Potassium cannot be negative."
-        )
-
-
-    crop_name = crop_names[crop]
-
-
-    # MACHINE LEARNING INPUT
-
-    features = pd.DataFrame(
-        [[
-            crop,
-            rainfall,
-            temperature,
-            humidity,
-            soil_ph,
-            nitrogen,
-            phosphorus,
-            potassium
-        ]],
-        columns=[
-            "crop",
-            "rainfall",
-            "temperature",
-            "humidity",
-            "soil_ph",
-            "nitrogen",
-            "phosphorus",
-            "potassium"
-        ]
-    )
-
-
-    # PREDICT
-
-    prediction = model.predict(features)[0]
-
-    prediction = round(float(prediction), 2)
-
-
-    # DATE AND TIME
-
-    prediction_date = datetime.now().strftime(
-        "%d-%m-%Y %I:%M %p"
-    )
-
-
-    # SAVE TO DATABASE
-
-    conn = get_db_connection()
-
-    cursor = conn.cursor()
-
-
-    cursor.execute(
-        """
-        INSERT INTO predictions
-        (
-            crop,
-            rainfall,
-            temperature,
-            humidity,
-            soil_ph,
-            nitrogen,
-            phosphorus,
-            potassium,
-            predicted_yield,
-            prediction_date
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """,
-        (
-            crop_name,
-            rainfall,
-            temperature,
-            humidity,
-            soil_ph,
-            nitrogen,
-            phosphorus,
-            potassium,
-            prediction,
-            prediction_date
-        )
-    )
-
-
-    conn.commit()
-
-    conn.close()
-
-
-    return render_template(
-        "result.html",
-        prediction=prediction
-    )
-
-
-# ==============================
-# HISTORY
-# ==============================
-
+# Prediction history
 @app.route("/history")
 def history():
 
     conn = get_db_connection()
 
-    cursor = conn.cursor()
-
-
-    cursor.execute(
+    rows = conn.execute(
         """
         SELECT
             id,
@@ -260,39 +160,83 @@ def history():
             temperature,
             humidity,
             soil_ph,
-            nitrogen,
-            phosphorus,
-            potassium,
             predicted_yield,
             prediction_date
         FROM predictions
         ORDER BY id DESC
         """
-    )
-
-
-    predictions = cursor.fetchall()
+    ).fetchall()
 
     conn.close()
 
-
     return render_template(
         "history.html",
-        predictions=predictions
+        rows=rows
     )
 
 
-# ==============================
-# PREDICTION DETAILS
-# ==============================
+# Dashboard
+@app.route("/dashboard")
+def dashboard():
 
+    conn = get_db_connection()
+
+    total_predictions = conn.execute(
+        "SELECT COUNT(*) FROM predictions"
+    ).fetchone()[0]
+
+    latest = conn.execute(
+        """
+        SELECT crop, predicted_yield
+        FROM predictions
+        ORDER BY id DESC
+        LIMIT 1
+        """
+    ).fetchone()
+
+    average_yield = conn.execute(
+        "SELECT AVG(predicted_yield) FROM predictions"
+    ).fetchone()[0]
+
+    chart_rows = conn.execute(
+        """
+        SELECT id, crop, predicted_yield
+        FROM predictions
+        ORDER BY id ASC
+        """
+    ).fetchall()
+
+    conn.close()
+
+    latest_crop = latest["crop"] if latest else "No data"
+    latest_yield = latest["predicted_yield"] if latest else 0
+    average_yield = round(average_yield, 2) if average_yield else 0
+
+    chart_data = [
+        {
+            "id": row["id"],
+            "crop": row["crop"],
+            "yield": row["predicted_yield"]
+        }
+        for row in chart_rows
+    ]
+
+    return render_template(
+        "dashboard.html",
+        total_predictions=total_predictions,
+        latest_crop=latest_crop,
+        latest_yield=latest_yield,
+        average_yield=average_yield,
+        chart_data=chart_data
+    )
+
+
+# Prediction details
 @app.route("/prediction/<int:prediction_id>")
 def prediction_details(prediction_id):
 
     conn = get_db_connection()
-
     cursor = conn.cursor()
-
 
     cursor.execute(
         """
@@ -314,20 +258,16 @@ def prediction_details(prediction_id):
         (prediction_id,)
     )
 
-
     prediction = cursor.fetchone()
 
     conn.close()
 
-
     if prediction is None:
-
         return render_template(
             "error.html",
             title="❌ Prediction Not Found",
             message="The requested prediction does not exist."
         )
-
 
     return render_template(
         "prediction_details.html",
@@ -335,112 +275,7 @@ def prediction_details(prediction_id):
     )
 
 
-# ==============================
-# DASHBOARD
-# ==============================
-
-@app.route("/dashboard")
-def dashboard():
-
-    conn = get_db_connection()
-
-    cursor = conn.cursor()
-
-
-    cursor.execute(
-        "SELECT COUNT(*) FROM predictions"
-    )
-
-    total_predictions = cursor.fetchone()[0]
-
-
-    cursor.execute(
-        """
-        SELECT crop, predicted_yield
-        FROM predictions
-        ORDER BY id DESC
-        LIMIT 1
-        """
-    )
-
-
-    latest = cursor.fetchone()
-
-
-    if latest:
-
-        latest_crop = latest[0]
-        latest_yield = latest[1]
-
-    else:
-
-        latest_crop = "No data"
-        latest_yield = 0
-
-
-    cursor.execute(
-        """
-        SELECT AVG(predicted_yield)
-        FROM predictions
-        """
-    )
-
-
-    average_yield = cursor.fetchone()[0]
-
-
-    if average_yield is None:
-
-        average_yield = 0
-
-
-    average_yield = round(
-        float(average_yield),
-        2
-    )
-
-
-    cursor.execute(
-        """
-        SELECT crop, predicted_yield
-        FROM predictions
-        ORDER BY id ASC
-        """
-    )
-
-
-    chart_data = cursor.fetchall()
-
-    conn.close()
-
-
-    crop_names_for_chart = []
-
-    crop_yields = []
-
-
-    for row in chart_data:
-
-        crop_names_for_chart.append(row[0])
-
-        crop_yields.append(row[1])
-
-
-    return render_template(
-        "dashboard.html",
-        total_predictions=total_predictions,
-        latest_crop=latest_crop,
-        latest_yield=latest_yield,
-        average_yield=average_yield,
-        crop_names=crop_names_for_chart,
-        crop_yields=crop_yields
-    )
-
-
-# ==============================
-# API - PREDICTION
-# ==============================
-
+# API - Prediction
 @app.route("/api/predict", methods=["POST"])
 def api_predict():
 
@@ -448,7 +283,7 @@ def api_predict():
 
         data = request.get_json()
 
-        crop = int(data["crop"])
+        crop = data["crop"]
         rainfall = float(data["rainfall"])
         temperature = float(data["temperature"])
         humidity = float(data["humidity"])
@@ -457,226 +292,102 @@ def api_predict():
         phosphorus = float(data["phosphorus"])
         potassium = float(data["potassium"])
 
-    except (TypeError, ValueError, KeyError):
+        crop_code = crop_mapping[crop]
+
+        input_data = pd.DataFrame(
+            [[
+                crop_code,
+                rainfall,
+                temperature,
+                humidity,
+                soil_ph,
+                nitrogen,
+                phosphorus,
+                potassium
+            ]],
+            columns=[
+                "crop",
+                "rainfall",
+                "temperature",
+                "humidity",
+                "soil_ph",
+                "nitrogen",
+                "phosphorus",
+                "potassium"
+            ]
+        )
+
+        prediction = model.predict(input_data)[0]
+
+        prediction = round(float(prediction), 2)
+
+        return jsonify({
+            "success": True,
+            "crop": crop,
+            "predicted_yield": prediction
+        })
+
+    except Exception as e:
 
         return jsonify({
             "success": False,
-            "message": "Invalid input data."
-        }), 400
+            "error": str(e)
+        })
 
 
-    if crop not in crop_names:
-
-        return jsonify({
-            "success": False,
-            "message": "Invalid crop."
-        }), 400
-
-
-    features = pd.DataFrame(
-        [[
-            crop,
-            rainfall,
-            temperature,
-            humidity,
-            soil_ph,
-            nitrogen,
-            phosphorus,
-            potassium
-        ]],
-        columns=[
-            "crop",
-            "rainfall",
-            "temperature",
-            "humidity",
-            "soil_ph",
-            "nitrogen",
-            "phosphorus",
-            "potassium"
-        ]
-    )
-
-
-    prediction = model.predict(features)[0]
-
-    prediction = round(float(prediction), 2)
-
-
-    return jsonify({
-        "success": True,
-        "crop": crop_names[crop],
-        "predicted_yield": prediction,
-        "unit": "tons/hectare"
-    })
-
-
-# ==============================
-# API - HISTORY
-# ==============================
-
+# API - History
 @app.route("/api/history")
 def api_history():
 
     conn = get_db_connection()
 
-    cursor = conn.cursor()
-
-
-    cursor.execute(
+    rows = conn.execute(
         """
-        SELECT
-            id,
-            crop,
-            rainfall,
-            temperature,
-            humidity,
-            soil_ph,
-            nitrogen,
-            phosphorus,
-            potassium,
-            predicted_yield,
-            prediction_date
+        SELECT *
         FROM predictions
         ORDER BY id DESC
         """
-    )
-
-
-    rows = cursor.fetchall()
+    ).fetchall()
 
     conn.close()
 
+    history_data = [dict(row) for row in rows]
 
-    history_data = []
-
-
-    for row in rows:
-
-        history_data.append({
-
-            "id": row[0],
-
-            "crop": row[1],
-
-            "rainfall": row[2],
-
-            "temperature": row[3],
-
-            "humidity": row[4],
-
-            "soil_ph": row[5],
-
-            "nitrogen": row[6],
-
-            "phosphorus": row[7],
-
-            "potassium": row[8],
-
-            "predicted_yield": row[9],
-
-            "prediction_date": row[10]
-
-        })
+    return jsonify(history_data)
 
 
-    return jsonify({
-
-        "success": True,
-
-        "count": len(history_data),
-
-        "predictions": history_data
-
-    })
-
-
-# ==============================
-# API - DASHBOARD
-# ==============================
-
+# API - Dashboard
 @app.route("/api/dashboard")
 def api_dashboard():
 
     conn = get_db_connection()
 
-    cursor = conn.cursor()
-
-
-    cursor.execute(
+    total_predictions = conn.execute(
         "SELECT COUNT(*) FROM predictions"
-    )
+    ).fetchone()[0]
 
-    total_predictions = cursor.fetchone()[0]
+    average_yield = conn.execute(
+        "SELECT AVG(predicted_yield) FROM predictions"
+    ).fetchone()[0]
 
-
-    cursor.execute(
-        """
-        SELECT AVG(predicted_yield)
-        FROM predictions
-        """
-    )
-
-
-    average_yield = cursor.fetchone()[0]
-
-
-    if average_yield is None:
-
-        average_yield = 0
-
-
-    average_yield = round(
-        float(average_yield),
-        2
-    )
-
-
-    cursor.execute(
+    latest = conn.execute(
         """
         SELECT crop, predicted_yield
         FROM predictions
         ORDER BY id DESC
         LIMIT 1
         """
-    )
-
-
-    latest = cursor.fetchone()
-
-
-    if latest:
-
-        latest_crop = latest[0]
-        latest_yield = latest[1]
-
-    else:
-
-        latest_crop = "No data"
-        latest_yield = 0
-
+    ).fetchone()
 
     conn.close()
 
-
     return jsonify({
-
-        "success": True,
-
         "total_predictions": total_predictions,
-
-        "latest_crop": latest_crop,
-
-        "latest_yield": latest_yield,
-
-        "average_yield": average_yield
-
+        "average_yield": round(average_yield, 2) if average_yield else 0,
+        "latest_crop": latest["crop"] if latest else None,
+        "latest_yield": latest["predicted_yield"] if latest else 0
     })
 
 
-# ==============================
-# RUN APPLICATION
-# ==============================
-
 if __name__ == "__main__":
-
     app.run(debug=True)
