@@ -34,9 +34,7 @@ crop_names = {
 # ==============================
 
 def get_db_connection():
-
     conn = sqlite3.connect("crop_yield.db")
-
     return conn
 
 
@@ -46,7 +44,6 @@ def get_db_connection():
 
 @app.route("/")
 def home():
-
     return render_template("index.html")
 
 
@@ -60,7 +57,6 @@ def predict():
     try:
 
         crop = int(request.form["crop"])
-
         rainfall = float(request.form["rainfall"])
         temperature = float(request.form["temperature"])
         humidity = float(request.form["humidity"])
@@ -77,10 +73,6 @@ def predict():
             message="Please enter valid values in all fields."
         )
 
-
-    # ==============================
-    # VALIDATION
-    # ==============================
 
     if crop not in crop_names:
 
@@ -154,16 +146,10 @@ def predict():
         )
 
 
-    # ==============================
-    # CROP NAME
-    # ==============================
-
     crop_name = crop_names[crop]
 
 
-    # ==============================
-    # MODEL INPUT
-    # ==============================
+    # MACHINE LEARNING INPUT
 
     features = pd.DataFrame(
         [[
@@ -189,31 +175,26 @@ def predict():
     )
 
 
-    # ==============================
-    # AI PREDICTION
-    # ==============================
+    # PREDICT
 
     prediction = model.predict(features)[0]
 
     prediction = round(float(prediction), 2)
 
 
-    # ==============================
-    # DATE & TIME
-    # ==============================
+    # DATE AND TIME
 
     prediction_date = datetime.now().strftime(
         "%d-%m-%Y %I:%M %p"
     )
 
 
-    # ==============================
     # SAVE TO DATABASE
-    # ==============================
 
     conn = get_db_connection()
 
     cursor = conn.cursor()
+
 
     cursor.execute(
         """
@@ -246,14 +227,11 @@ def predict():
         )
     )
 
+
     conn.commit()
 
     conn.close()
 
-
-    # ==============================
-    # SHOW RESULT
-    # ==============================
 
     return render_template(
         "result.html",
@@ -271,6 +249,7 @@ def history():
     conn = get_db_connection()
 
     cursor = conn.cursor()
+
 
     cursor.execute(
         """
@@ -291,13 +270,68 @@ def history():
         """
     )
 
+
     predictions = cursor.fetchall()
 
     conn.close()
 
+
     return render_template(
         "history.html",
         predictions=predictions
+    )
+
+
+# ==============================
+# PREDICTION DETAILS
+# ==============================
+
+@app.route("/prediction/<int:prediction_id>")
+def prediction_details(prediction_id):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+
+    cursor.execute(
+        """
+        SELECT
+            id,
+            crop,
+            rainfall,
+            temperature,
+            humidity,
+            soil_ph,
+            nitrogen,
+            phosphorus,
+            potassium,
+            predicted_yield,
+            prediction_date
+        FROM predictions
+        WHERE id = ?
+        """,
+        (prediction_id,)
+    )
+
+
+    prediction = cursor.fetchone()
+
+    conn.close()
+
+
+    if prediction is None:
+
+        return render_template(
+            "error.html",
+            title="❌ Prediction Not Found",
+            message="The requested prediction does not exist."
+        )
+
+
+    return render_template(
+        "prediction_details.html",
+        prediction=prediction
     )
 
 
@@ -313,16 +347,12 @@ def dashboard():
     cursor = conn.cursor()
 
 
-    # Total predictions
-
     cursor.execute(
         "SELECT COUNT(*) FROM predictions"
     )
 
     total_predictions = cursor.fetchone()[0]
 
-
-    # Latest prediction
 
     cursor.execute(
         """
@@ -332,6 +362,7 @@ def dashboard():
         LIMIT 1
         """
     )
+
 
     latest = cursor.fetchone()
 
@@ -347,14 +378,13 @@ def dashboard():
         latest_yield = 0
 
 
-    # Average yield
-
     cursor.execute(
         """
         SELECT AVG(predicted_yield)
         FROM predictions
         """
     )
+
 
     average_yield = cursor.fetchone()[0]
 
@@ -363,13 +393,12 @@ def dashboard():
 
         average_yield = 0
 
+
     average_yield = round(
         float(average_yield),
         2
     )
 
-
-    # Chart data
 
     cursor.execute(
         """
@@ -378,6 +407,7 @@ def dashboard():
         ORDER BY id ASC
         """
     )
+
 
     chart_data = cursor.fetchall()
 
@@ -473,15 +503,10 @@ def api_predict():
 
 
     return jsonify({
-
         "success": True,
-
         "crop": crop_names[crop],
-
         "predicted_yield": prediction,
-
         "unit": "tons/hectare"
-
     })
 
 
@@ -495,6 +520,7 @@ def api_history():
     conn = get_db_connection()
 
     cursor = conn.cursor()
+
 
     cursor.execute(
         """
@@ -514,6 +540,7 @@ def api_history():
         ORDER BY id DESC
         """
     )
+
 
     rows = cursor.fetchall()
 
@@ -589,12 +616,14 @@ def api_dashboard():
         """
     )
 
+
     average_yield = cursor.fetchone()[0]
 
 
     if average_yield is None:
 
         average_yield = 0
+
 
     average_yield = round(
         float(average_yield),
@@ -610,6 +639,7 @@ def api_dashboard():
         LIMIT 1
         """
     )
+
 
     latest = cursor.fetchone()
 

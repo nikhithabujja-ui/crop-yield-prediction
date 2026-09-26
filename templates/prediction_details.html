@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Prediction Details - CropAI</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌾 CropAI
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">
+            🏠 Home
+        </a>
+
+        <a href="/dashboard">
+            📊 Dashboard
+        </a>
+
+        <a href="/history">
+            📋 History
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- DETAILS PAGE -->
+
+<div class="details-container">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="details-header">
+
+        <div class="details-icon">
+            🌾
+        </div>
+
+        <h1>
+            Prediction Details
+        </h1>
+
+        <p>
+            Complete information about this CropAI prediction
+        </p>
+
+    </div>
+
+
+    <!-- MAIN RESULT -->
+
+    <div class="details-result-card">
+
+
+        <div class="details-result-icon">
+            📈
+        </div>
+
+
+        <div>
+
+            <p class="details-label">
+                Predicted Crop Yield
+            </p>
+
+            <div class="details-yield">
+                {{ prediction[9] }}
+            </div>
+
+            <p class="details-unit">
+                tons per hectare
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- BASIC INFORMATION -->
+
+    <div class="details-section">
+
+
+        <div class="details-section-title">
+
+            <span>🌱</span>
+
+            <div>
+
+                <h2>
+                    Crop Information
+                </h2>
+
+                <p>
+                    Selected crop and prediction details
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+
+            <div class="details-item">
+
+                <span class="details-item-icon">
+                    🌾
+                </span>
+
+                <div>
+
+                    <h3>
+                        Crop
+                    </h3>
+
+                    <strong>
+                        {{ prediction[1] }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-item">
+
+                <span class="details-item-icon">
+                    🆔
+                </span>
+
+                <div>
+
+                    <h3>
+                        Prediction ID
+                    </h3>
+
+                    <strong>
+                        #{{ prediction[0] }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-item">
+
+                <span class="details-item-icon">
+                    🕒
+                </span>
+
+                <div>
+
+                    <h3>
+                        Prediction Date
+                    </h3>
+
+                    <strong>
+
+                        {% if prediction[10] %}
+
+                            {{ prediction[10] }}
+
+                        {% else %}
+
+                            Not available
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- WEATHER INFORMATION -->
+
+    <div class="details-section">
+
+
+        <div class="details-section-title">
+
+            <span>🌦️</span>
+
+            <div>
+
+                <h2>
+                    Weather Conditions
+                </h2>
+
+                <p>
+                    Weather values used by the AI model
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+
+            <div class="details-item">
+
+                <span class="details-item-icon">
+                    🌧️
+                </span>
+
+                <div>
+
+                    <h3>
+                        Rainfall
+                    </h3>
+
+                    <strong>
+                        {{ prediction[2] }} mm
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-item">
+
+                <span class="details-item-icon">
+                    🌡️
+                </span>
+
+                <div>
+
+                    <h3>
+                        Temperature
+                    </h3>
+
+                    <strong>
+                        {{ prediction[3] }} °C
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-item">
+
+                <span class="details-item-icon">
+                    💧
+                </span>
+
+                <div>
+
+                    <h3>
+                        Humidity
+                    </h3>
+
+                    <strong>
+                        {{ prediction[4] }} %
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- SOIL INFORMATION -->
+
+    <div class="details-section">
+
+
+        <div class="details-section-title">
+
+            <span>🧪</span>
+
+            <div>
+
+                <h2>
+                    Soil Conditions
+                </h2>
+
+                <p>
+                    Soil and nutrient values used for prediction
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+
+            <div class="details-item">
+
+                <span class="details-item-icon">
+                    🧪
+                </span>
+
+                <div>
+
+                    <h3>
+                        Soil pH
+                    </h3>
+
+                    <strong>
+                        {{ prediction[5] }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-item">
+
+                <span class="details-item-icon">
+                    🌱
+                </span>
+
+                <div>
+
+                    <h3>
+                        Nitrogen
+                    </h3>
+
+                    <strong>
+                        {{ prediction[6] }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-item">
+
+                <span class="details-item-icon">
+                    🧬
+                </span>
+
+                <div>
+
+                    <h3>
+                        Phosphorus
+                    </h3>
+
+                    <strong>
+                        {{ prediction[7] }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-item">
+
+                <span class="details-item-icon">
+                    ⚡
+                </span>
+
+                <div>
+
+                    <h3>
+                        Potassium
+                    </h3>
+
+                    <strong>
+                        {{ prediction[8] }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- AI INFORMATION -->
+
+    <div class="details-ai-card">
+
+
+        <div class="details-ai-icon">
+            🤖
+        </div>
+
+
+        <div>
+
+            <h2>
+                AI Prediction Analysis
+            </h2>
+
+            <p>
+                CropAI uses a Random Forest machine learning
+                model to estimate crop yield from the provided
+                crop, weather and soil conditions.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ACTION BUTTONS -->
+
+    <div class="dashboard-actions">
+
+
+        <a
+            href="/history"
+            class="action-button"
+        >
+            ← Back to History
+        </a>
+
+
+        <a
+            href="/"
+            class="action-button secondary"
+        >
+            🔮 New Prediction
+        </a>
+
+
+        <a
+            href="/dashboard"
+            class="action-button secondary"
+        >
+            📊 Dashboard
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        🌾 CropAI | AI-Based Crop Yield Prediction System
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
