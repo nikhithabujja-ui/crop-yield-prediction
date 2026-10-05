@@ -6,12 +6,19 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Load trained model
+
+# =========================
+# LOAD TRAINED MODEL
+# =========================
+
 with open("crop_yield_model.pkl", "rb") as file:
     model = pickle.load(file)
 
 
-# Crop mapping
+# =========================
+# CROP MAPPING
+# =========================
+
 crop_names = {
     0: "Rice",
     1: "Wheat",
@@ -31,30 +38,48 @@ crop_mapping = {
 }
 
 
-# Database connection
+# =========================
+# DATABASE CONNECTION
+# =========================
+
 def get_db_connection():
+
     conn = sqlite3.connect("crop_yield.db")
+
     conn.row_factory = sqlite3.Row
+
     return conn
 
 
-# Home page
+# =========================
+# HOME PAGE
+# =========================
+
 @app.route("/")
 def home():
+
     return render_template("index.html")
 
 
-# Crop recommendations page
+# =========================
+# CROP RECOMMENDATIONS
+# =========================
+
 @app.route("/recommendations")
 def recommendations():
+
     return render_template("crop_recommendations.html")
 
 
-# Prediction
+# =========================
+# PREDICTION
+# =========================
+
 @app.route("/predict", methods=["POST"])
 def predict():
 
     try:
+
         crop = request.form["crop"]
 
         rainfall = float(request.form["rainfall"])
@@ -65,7 +90,9 @@ def predict():
         phosphorus = float(request.form["phosphorus"])
         potassium = float(request.form["potassium"])
 
+
         crop_code = crop_mapping[crop]
+
 
         input_data = pd.DataFrame(
             [[
@@ -90,11 +117,16 @@ def predict():
             ]
         )
 
+
         prediction = model.predict(input_data)[0]
 
         prediction = round(float(prediction), 2)
 
-        # Save prediction to database
+
+        # =========================
+        # SAVE TO DATABASE
+        # =========================
+
         conn = get_db_connection()
 
         conn.execute(
@@ -129,12 +161,27 @@ def predict():
         )
 
         conn.commit()
+
         conn.close()
+
+
+        # =========================
+        # RESULT PAGE
+        # =========================
 
         return render_template(
             "result.html",
-            prediction=prediction
+            prediction=prediction,
+            crop=crop,
+            rainfall=rainfall,
+            temperature=temperature,
+            humidity=humidity,
+            soil_ph=soil_ph,
+            nitrogen=nitrogen,
+            phosphorus=phosphorus,
+            potassium=potassium
         )
+
 
     except Exception as e:
 
@@ -145,7 +192,10 @@ def predict():
         )
 
 
-# Prediction history
+# =========================
+# PREDICTION HISTORY
+# =========================
+
 @app.route("/history")
 def history():
 
@@ -169,57 +219,83 @@ def history():
 
     conn.close()
 
+
     return render_template(
         "history.html",
         rows=rows
     )
 
 
-# Dashboard
+# =========================
+# DASHBOARD
+# =========================
+
 @app.route("/dashboard")
 def dashboard():
 
     conn = get_db_connection()
 
+
     total_predictions = conn.execute(
         "SELECT COUNT(*) FROM predictions"
     ).fetchone()[0]
 
+
     latest = conn.execute(
         """
-        SELECT crop, predicted_yield
+        SELECT
+            crop,
+            predicted_yield
         FROM predictions
         ORDER BY id DESC
         LIMIT 1
         """
     ).fetchone()
 
+
     average_yield = conn.execute(
         "SELECT AVG(predicted_yield) FROM predictions"
     ).fetchone()[0]
 
+
     chart_rows = conn.execute(
         """
-        SELECT id, crop, predicted_yield
+        SELECT
+            id,
+            crop,
+            predicted_yield
         FROM predictions
         ORDER BY id ASC
         """
     ).fetchall()
 
+
     conn.close()
 
+
     latest_crop = latest["crop"] if latest else "No data"
+
     latest_yield = latest["predicted_yield"] if latest else 0
-    average_yield = round(average_yield, 2) if average_yield else 0
+
+    average_yield = (
+        round(average_yield, 2)
+        if average_yield
+        else 0
+    )
+
 
     chart_data = [
+
         {
             "id": row["id"],
             "crop": row["crop"],
             "yield": row["predicted_yield"]
         }
+
         for row in chart_rows
+
     ]
+
 
     return render_template(
         "dashboard.html",
@@ -231,12 +307,17 @@ def dashboard():
     )
 
 
-# Prediction details
+# =========================
+# PREDICTION DETAILS
+# =========================
+
 @app.route("/prediction/<int:prediction_id>")
 def prediction_details(prediction_id):
 
     conn = get_db_connection()
+
     cursor = conn.cursor()
+
 
     cursor.execute(
         """
@@ -258,16 +339,20 @@ def prediction_details(prediction_id):
         (prediction_id,)
     )
 
+
     prediction = cursor.fetchone()
 
     conn.close()
 
+
     if prediction is None:
+
         return render_template(
             "error.html",
             title="❌ Prediction Not Found",
             message="The requested prediction does not exist."
         )
+
 
     return render_template(
         "prediction_details.html",
@@ -275,7 +360,10 @@ def prediction_details(prediction_id):
     )
 
 
-# API - Prediction
+# =========================
+# API - PREDICTION
+# =========================
+
 @app.route("/api/predict", methods=["POST"])
 def api_predict():
 
@@ -283,7 +371,9 @@ def api_predict():
 
         data = request.get_json()
 
+
         crop = data["crop"]
+
         rainfall = float(data["rainfall"])
         temperature = float(data["temperature"])
         humidity = float(data["humidity"])
@@ -292,7 +382,9 @@ def api_predict():
         phosphorus = float(data["phosphorus"])
         potassium = float(data["potassium"])
 
+
         crop_code = crop_mapping[crop]
+
 
         input_data = pd.DataFrame(
             [[
@@ -317,29 +409,43 @@ def api_predict():
             ]
         )
 
+
         prediction = model.predict(input_data)[0]
 
         prediction = round(float(prediction), 2)
 
+
         return jsonify({
+
             "success": True,
+
             "crop": crop,
+
             "predicted_yield": prediction
+
         })
+
 
     except Exception as e:
 
         return jsonify({
+
             "success": False,
+
             "error": str(e)
+
         })
 
 
-# API - History
+# =========================
+# API - HISTORY
+# =========================
+
 @app.route("/api/history")
 def api_history():
 
     conn = get_db_connection()
+
 
     rows = conn.execute(
         """
@@ -349,45 +455,83 @@ def api_history():
         """
     ).fetchall()
 
+
     conn.close()
 
-    history_data = [dict(row) for row in rows]
+
+    history_data = [
+
+        dict(row)
+
+        for row in rows
+
+    ]
+
 
     return jsonify(history_data)
 
 
-# API - Dashboard
+# =========================
+# API - DASHBOARD
+# =========================
+
 @app.route("/api/dashboard")
 def api_dashboard():
 
     conn = get_db_connection()
 
+
     total_predictions = conn.execute(
         "SELECT COUNT(*) FROM predictions"
     ).fetchone()[0]
+
 
     average_yield = conn.execute(
         "SELECT AVG(predicted_yield) FROM predictions"
     ).fetchone()[0]
 
+
     latest = conn.execute(
         """
-        SELECT crop, predicted_yield
+        SELECT
+            crop,
+            predicted_yield
         FROM predictions
         ORDER BY id DESC
         LIMIT 1
         """
     ).fetchone()
 
+
     conn.close()
 
+
     return jsonify({
+
         "total_predictions": total_predictions,
-        "average_yield": round(average_yield, 2) if average_yield else 0,
-        "latest_crop": latest["crop"] if latest else None,
-        "latest_yield": latest["predicted_yield"] if latest else 0
+
+        "average_yield":
+            round(average_yield, 2)
+            if average_yield
+            else 0,
+
+        "latest_crop":
+            latest["crop"]
+            if latest
+            else None,
+
+        "latest_yield":
+            latest["predicted_yield"]
+            if latest
+            else 0
+
     })
 
 
+# =========================
+# RUN APPLICATION
+# =========================
+
 if __name__ == "__main__":
+
     app.run(debug=True)
